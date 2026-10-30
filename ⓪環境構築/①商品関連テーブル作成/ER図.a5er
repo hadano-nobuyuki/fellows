@@ -1,0 +1,158 @@
+﻿# A5:ER FORMAT:21
+# A5:ER ENCODING:UTF8
+# A5:ER Mk-1 Copyright © 2007 m.matsubara
+# A5:SQL Mk-2 Version 2.21.1 Copyright © 1997 - 2026 m.matsubara
+#  https://a5m2.mmatsubara.com
+
+[Manager]
+ProjectName=
+Author=
+MaxEntityRowShow=1000
+ReadOnlyRecommend=0
+PageInfo="Main",2,"A3Landscape",$FFFFFF
+LogicalView=1
+DecodeDomain=0
+ViewFormat=0
+UseNondependenceDashLine=0
+FontName=Tahoma
+FontSize=12
+PaperSize=A4Landscape
+HeaderLeft=
+HeaderCenter=
+HeaderRight=
+FooterLeft=
+FooterCenter=
+FooterRight=
+ShowPageoutRelation=1
+DefaultPkName=%0:s_PKC
+DefaultPkIndexName=%0:s_PKI
+DefaultIndexName=%0:s_IX%1:d
+DefaultFkName=%0:s_FK%1:d
+SqlSeparator=0
+UpperCaseKeyword=0
+ShowTag=1
+ShowCommonAttributes=0
+ShowDisableAttributes=0
+BugFixEntityWidth=1
+
+[Entity]
+PName=廃番商品
+LName=廃番商品
+Comment=
+TableInnerOption=
+TableOption=
+Page=Main
+Left=100
+Top=1000
+Field="商品コード","商品コード","character(5)","NOT NULL",0,"","",$FFFFFFFF,""
+Field="商品名","商品名","character varying(100)","NOT NULL",,"","",$FFFFFFFF,""
+Field="単価","単価","integer","NOT NULL",,"","",$FFFFFFFF,""
+Field="商品区分","商品区分","character(1)","NOT NULL",,"","",$FFFFFFFF,""
+Field="廃番日","廃番日","date","NOT NULL",,"","",$FFFFFFFF,""
+Field="売上個数","売上個数","integer","NOT NULL",,"","",$FFFFFFFF,""
+EffectMode=None
+Color=$000000
+BkColor=$FFFFFF
+Position="Main",100,1000
+ZOrder=-3
+
+[Entity]
+PName=商品
+LName=商品
+Comment=
+TableInnerOption=
+TableOption=
+Page=Main
+Left=100
+Top=500
+Field="商品コード","商品コード","character(5)","NOT NULL",0,"","",$FFFFFFFF,""
+Field="商品名","商品名","character varying(100)","NOT NULL",,"","",$FFFFFFFF,""
+Field="単価","単価","integer","NOT NULL",,"","",$FFFFFFFF,""
+Field="商品区分","商品区分","character(1)","NOT NULL",,"","",$FFFFFFFF,""
+Field="関連商品コード","関連商品コード","character(5)",,,"","",$FFFFFFFF,""
+EffectMode=None
+Color=$000000
+BkColor=$FFFFFF
+Position="Main",100,500
+ZOrder=-2
+
+[Entity]
+PName=ユーザー情報
+LName=ユーザー情報
+Comment=
+TableInnerOption=
+TableOption=
+Page=Main
+Left=100
+Top=100
+Field="ユーザーid","ユーザーid","serial","NOT NULL",0,"","",$FFFFFFFF,""
+Field="eメール","eメール","character varying(255)","NOT NULL",,"","",$FFFFFFFF,""
+Field="パスワード","パスワード","character varying(255)","NOT NULL",,"","",$FFFFFFFF,""
+EffectMode=None
+Color=$000000
+BkColor=$FFFFFF
+Position="Main",100,100
+ZOrder=-1
+
+[Entity]
+PName=注文
+LName=注文
+Comment=
+TableInnerOption=
+TableOption=
+Page=Main
+Left=1000
+Top=500
+Field="注文日","注文日","date","NOT NULL",0,"","",$FFFFFFFF,""
+Field="注文番号","注文番号","character(12)","NOT NULL",1,"","",$FFFFFFFF,""
+Field="注文枝番","注文枝番","integer","NOT NULL",2,"","",$FFFFFFFF,""
+Field="商品コード","商品コード","character(5)","NOT NULL",,"","",$FFFFFFFF,""
+Field="数量","数量","integer","NOT NULL",,"","",$FFFFFFFF,""
+Field="クーポン割引料","クーポン割引料","integer",,,"","",$FFFFFFFF,""
+EffectMode=None
+Color=$000000
+BkColor=$FFFFFF
+Position="Main",1000,500
+ZOrder=-4
+
+[Relation]
+Entity1=商品
+Entity2=商品
+RelationType1=1
+RelationType2=3
+Fields1=商品コード
+Fields2=関連商品コード
+Cardinarity1=
+Cardinarity2=
+Position="MAIN",0,6148,10000,9500,R,R,""
+Dependence=0
+Caption=
+PName=
+LineMode=0
+Bar1=615
+Bar2=1000
+Bar3=950
+TermPos1=R
+TermPos2=R
+ZOrder=2
+
+[Relation]
+Entity1=商品
+Entity2=注文
+RelationType1=2
+RelationType2=3
+Fields1=商品コード
+Fields2=商品コード
+Cardinarity1=
+Cardinarity2=
+Position="MAIN",0,2335,7665,2208,R,R,""
+Dependence=0
+Caption=
+PName=
+LineMode=0
+Bar1=234
+Bar2=766
+Bar3=221
+TermPos1=R
+TermPos2=R
+ZOrder=3
