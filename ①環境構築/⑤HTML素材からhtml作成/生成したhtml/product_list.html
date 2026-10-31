@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>商品一覧 | ClaudeCode 研修用プログラム</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="list-page">
+<!--
+  画面名 : 商品一覧画面
+  表示内容はサーブレットから受け取る(下の行はデザイン確認用のサンプル)
+  表示形式(画面定義より)
+    商品コード     : xxxxx(5桁)
+    商品名         : 25文字まで表示(DB上は100文字格納可能)
+    単価           : z,zzz,zzz,zz9(カンマ区切り)
+    商品区分       : x(1文字)
+    関連商品コード : xxxxx
+    注文状況       : 注文(zzz9 件)
+                     注文件数があるものはリンクにし、注文情報表示画面(order_detail.html)へ遷移する
+  画面サイズに従い一覧の表示件数を変え、表示しきれないものはスクロールで表示する
+  ログアウトボタン押下でログイン画面へ遷移する
+-->
+<header class="app-header">
+  <img class="logo" src="logo.svg" alt="ロゴ">
+  <span class="app-name">ClaudeCode 研修用プログラム</span>
+  <span class="spacer"></span>
+  <form method="post" action="logout">
+    <button type="submit" class="btn btn-outline">ログアウト</button>
+  </form>
+</header>
+
+<main class="content">
+  <div class="page-title">
+    <h1>商品一覧画面</h1>
+  </div>
+
+  <div class="table-card">
+    <table>
+      <thead>
+        <tr>
+          <th>商品コード</th>
+          <th>商品名</th>
+          <th class="num">単価</th>
+          <th>商品区分</th>
+          <th>関連商品コード</th>
+          <th>注文状況</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="code">P1001</td>
+          <td class="name">ワイヤレスマウス</td>
+          <td class="num">2,480</td>
+          <td><span class="badge">A</span></td>
+          <td><span class="code">P1004</span></td>
+          <td><a class="order-link" href="order_detail.html?code=P1001">注文(28 件)</a></td>
+        </tr>
+        <tr>
+          <td class="code">P1002</td>
+          <td class="name">USB-C 充電ケーブル 1m</td>
+          <td class="num">980</td>
+          <td><span class="badge">A</span></td>
+          <td><span class="code">P1005</span></td>
+          <td><a class="order-link" href="order_detail.html?code=P1002">注文(3 件)</a></td>
+        </tr>
+        <tr>
+          <td class="code">P1003</td>
+          <td class="name">ノートパソコンスタンド アルミ製</td>
+          <td class="num">4,980</td>
+          <td><span class="badge">B</span></td>
+          <td><span class="muted">―</span></td>
+          <td><span class="muted">注文なし</span></td>
+        </tr>
+        <tr>
+          <td class="code">P1004</td>
+          <td class="name">メカニカルキーボード 日本語配列</td>
+          <td class="num">12,800</td>
+          <td><span class="badge">A</span></td>
+          <td><span class="code">P1007</span></td>
+          <td><span class="muted">注文なし</span></td>
+        </tr>
+        <tr>
+          <td class="code">P1005</td>
+          <td class="name">27インチ 4K モニター</td>
+          <td class="num">54,800</td>
+          <td><span class="badge">A</span></td>
+          <td><span class="code">P1008</span></td>
+          <td><a class="order-link" href="order_detail.html?code=P1005">注文(1 件)</a></td>
+        </tr>
+        <tr>
+          <td class="code">P1006</td>
+          <td class="name">Webカメラ フルHD</td>
+          <td class="num">6,980</td>
+          <td><span class="badge">C</span></td>
+          <td><span class="muted">―</span></td>
+          <td><a class="order-link" href="order_detail.html?code=P1006">注文(1 件)</a></td>
+        </tr>
+        <tr>
+          <td class="code">P1007</td>
+          <td class="name">ノイズキャンセリングヘッドホン</td>
+          <td class="num">32,800</td>
+          <td><span class="badge">A</span></td>
+          <td><span class="code">P1010</span></td>
+          <td><a class="order-link" href="order_detail.html?code=P1007">注文(28 件)</a></td>
+        </tr>
+        <tr>
+          <td class="code">P1008</td>
+          <td class="name">モバイルバッテリー 10000mAh</td>
+          <td class="num">3,980</td>
+          <td><span class="badge">A</span></td>
+          <td><span class="code">P1011</span></td>
+          <td><span class="muted">注文なし</span></td>
+        </tr>
+        <tr>
+          <td class="code">P1009</td>
+          <td class="name">LANケーブル Cat6 3m</td>
+          <td class="num">780</td>
+          <td><span class="badge">B</span></td>
+          <td><span class="muted">―</span></td>
+          <td><a class="order-link" href="order_detail.html?code=P1009">注文(5 件)</a></td>
+        </tr>
+        <tr>
+          <td class="code">P1010</td>
+          <td class="name">外付けSSD 1TB</td>
+          <td class="num">15,800</td>
+          <td><span class="badge">A</span></td>
+          <td><span class="code">P1013</span></td>
+          <td><span class="muted">注文なし</span></td>
+        </tr>
+        <tr>
+          <td class="code">P1011</td>
+          <td class="name">デスクライト LED 調光機能付き</td>
+          <td class="num">5,480</td>
+          <td><span class="badge">C</span></td>
+          <td><span class="code">P1014</span></td>
+          <td><a class="order-link" href="order_detail.html?code=P1011">注文(1 件)</a></td>
+        </tr>
+        <tr>
+          <td class="code">P1012</td>
+          <td class="name">エルゴノミクスチェア ハイバック メッシュ素材 ランバーサポート付</td>
+          <td class="num">98,000</td>
+          <td><span class="badge">B</span></td>
+          <td><span class="muted">―</span></td>
+          <td><span class="muted">注文なし</span></td>
+        </tr>
+        <tr>
+          <td class="code">P1013</td>
+          <td class="name">HDMI 切替器 3入力1出力</td>
+          <td class="num">2,980</td>
+          <td><span class="badge">A</span></td>
+          <td><span class="code">P1001</span></td>
+          <td><span class="muted">注文なし</span></td>
+        </tr>
+        <tr>
+          <td class="code">P1014</td>
+          <td class="name">トラックボールマウス</td>
+          <td class="num">7,480</td>
+          <td><span class="badge">A</span></td>
+          <td><span class="code">P1002</span></td>
+          <td><a class="order-link" href="order_detail.html?code=P1014">注文(1 件)</a></td>
+        </tr>
+        <tr>
+          <td class="code">P1015</td>
+          <td class="name">USB ハブ 7ポート</td>
+          <td class="num">3,480</td>
+          <td><span class="badge">B</span></td>
+          <td><span class="muted">―</span></td>
+          <td><a class="order-link" href="order_detail.html?code=P1015">注文(5 件)</a></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</main>
+</body>
+</html>

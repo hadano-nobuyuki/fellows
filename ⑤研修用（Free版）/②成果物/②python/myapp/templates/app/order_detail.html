@@ -1,0 +1,56 @@
+{% load static app_extras %}<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>注文情報 | ClaudeCode 研修用プログラム</title>
+  <link rel="stylesheet" href="{% static 'style.css' %}">
+</head>
+<body class="list-page">
+<header class="app-header">
+  <img class="logo" src="{% static 'logo.svg' %}" alt="ロゴ">
+  <span class="app-name">ClaudeCode 研修用プログラム</span>
+  <span class="spacer"></span>
+  <form method="post" action="{% url 'logout' %}">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-outline">ログアウト</button>
+  </form>
+</header>
+
+<main class="content">
+  <div class="page-title">
+    <h1>注文情報詳細画面</h1>
+    <span class="sub">商品コード:<strong class="code">{{ code }}</strong></span>
+  </div>
+
+  <div class="table-card">
+    <table>
+      <thead>
+        <tr>
+          <th>注文日</th>
+          <th>注文番号</th>
+          <th class="num">注文枝番</th>
+          <th class="num">数量</th>
+          <th class="num">クーポン割引料</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for o in orders %}
+        <tr>
+          <td>{{ o.date|date:"Y/m/d" }}</td>
+          <td class="code">{{ o.number }}</td>
+          <td class="num">{{ o.branch }}</td>
+          <td class="num">{{ o.quantity|comma }}</td>
+          <td class="num{% if o.coupon is not None and o.coupon < 0 %} minus{% endif %}">{{ o.coupon|signed_comma }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <div class="page-footer">
+    <a class="back-link" href="{% url 'products' %}">&larr; 商品一覧に戻る</a>
+  </div>
+</main>
+</body>
+</html>

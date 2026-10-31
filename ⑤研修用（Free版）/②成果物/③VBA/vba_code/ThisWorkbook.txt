@@ -1,0 +1,19 @@
+'==============================================================
+' ThisWorkbook のコード
+' VBE の「ThisWorkbook」のコード画面を全選択して削除し、
+' この内容(この行以降すべて)を貼り付けてください。
+'==============================================================
+Option Explicit
+
+Private Sub Workbook_Open()
+    On Error GoTo EH
+
+    modMain.InitWorkbook
+    Exit Sub
+
+EH:
+    MsgBox "初期化処理でエラーが発生しました。" & vbCrLf & vbCrLf & _
+           "プロシージャ: ThisWorkbook.Workbook_Open" & vbCrLf & _
+           "エラー番号: " & CStr(Err.Number) & vbCrLf & _
+           "内容: " & Err.Description, vbExclamation, "エラー"
+End Sub

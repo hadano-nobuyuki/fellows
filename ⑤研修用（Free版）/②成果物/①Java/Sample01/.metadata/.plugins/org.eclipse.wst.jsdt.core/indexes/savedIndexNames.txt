@@ -1,0 +1,7 @@
+INDEX VERSION 1.4+C:\Users\norai\Desktop\AI生成プログラム\⑤研修用（Free版）\②成果物\①Java\Sample01\.metadata\.plugins\org.eclipse.wst.jsdt.core\indexes
+1289554408.index
+1077814148.index
+2026610250.index
+3176077339.index
+3507888743.index
+3221333462.index
