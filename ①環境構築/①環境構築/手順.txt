@@ -6,16 +6,6 @@
  -Eclipse
 	pleiades-2026-06-java-win-64bit-jre_20260705.exeを実行（eclipse.exeを起動できる状態にする）
 
- -PostgreSQL
-	postgresql-18.6-5-windows-x64.exeを実行しインストール
-　	→ パスワードの設定画面で、スーパーユーザー（postgres）のパスワード'1234'を入力（アプリ生成時にこの値を使うため）
-	→ ロケール（Locale） の設定画面では「C」を選択（ドロップダウンリストから手動で「C」を選択）→ デフォルトのままであればソート順等が日本語対応になる（講座では影響はない）
-　	→ 他の設定は[NEXT]で進める
-　	★インストール完了後PostgreSQLのbinフォルダのパス（C:\Program Files\PostgreSQL\18\bin ※18はバージョン番号）をWindowsの環境変数「Path」に追加
-
- -psqlodbc（Windows用ODBC ドライバ）
-	psqlodbc_x64.msiを実行しインストール
-
  -VSCode
 	VSCodeUserSetup-x64-1.144.0.exeを実行しインストール
 	→ 追加タスクの選択（★デフォルトから変更を推奨）:
@@ -27,12 +17,27 @@
 	• [ON] PATHへの追加（再起動後に使用可能）
 		【重要】デフォルトでONになっていますが、絶対に外さないでください。コマンドプロンプトから code . と入力してVSCodeを開くために必須の設定
 	→ 他の設定は「次へ」で進める
-	★初期設定（日本語化）
+	★初期設定
 	• VSCodeが起動したら、画面左側にある四角いブロックが4つ並んだアイコン（Extensions / 拡張機能）をクリック
+	（１）pythonインストール
+	• 上部の検索バーに 「python」 と入力
+	• Microsoft公式が提供している 「Python」（作者名：Microsoft）の「インストール」
+	（２）日本語化
 	• 上部の検索バーに 「Japanese」 と入力
-	• 一番上に表示される 「Japanese Language Pack for Visual Studio Code」（Microsoft公式）の 「Install」 ボタンをクリック
+	• 一番上に表示される 「Japanese Language Pack for Visual Studio Code」（Microsoft公式）の 「インストール」
 	• インストールが完了すると、画面右下に「Change Language and Restart」という青いボタンが表示されるので、それをクリック
 	• VSCodeが自動で再起動し、画面が日本語に切り替わる
+
+ -PostgreSQL
+	postgresql-18.6-5-windows-x64.exeを実行しインストール
+　	→ パスワードの設定画面で、スーパーユーザー（postgres）のパスワード'1234'を入力（アプリ生成時にこの値を使うため）
+	→ ロケール（Locale） の設定画面では「C」を選択（ドロップダウンリストから手動で「C」を選択）→ デフォルトのままであればソート順等が日本語対応になる（講座では影響はない）
+　	→ 他の設定は[NEXT]で進める
+　	★インストール完了後PostgreSQLのbinフォルダのパス（C:\Program Files\PostgreSQL\18\bin ※18はバージョン番号）をWindowsの環境変数「Path」に追加
+
+ -psqlodbc（Windows用ODBC ドライバ）
+	psqlodbc_x64.msiを実行しインストール
+
 
 
 ２．[③Claude利用開始]に従いClaude環境を整備
