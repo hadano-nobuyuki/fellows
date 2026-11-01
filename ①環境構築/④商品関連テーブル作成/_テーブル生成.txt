@@ -1,7 +1,0 @@
-A5M2にて以下の作業を実施
-
-①myappdbの作成（次のSQLを実行）
-CREATE DATABASE myappdb OWNER myapp;
-
-②テーブルの生成（次のSQLを実行）
-テーブル定義書（myappdb）.sql
