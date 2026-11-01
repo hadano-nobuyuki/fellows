@@ -1,3 +1,0 @@
-INDEX VERSION 1.134
-C:\Users\norai\Desktop\AI生成プログラム\⑤研修用（Free版）\②成果物\①Java\Sample01\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\3063527466.index
-\Sample01\src\main\java
