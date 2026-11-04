@@ -8,11 +8,12 @@
 
  -Python
 	python-3.12.10-amd64.exeを実行しインストール
-	→ 最初の画面で「Add python.exe to PATH」に必ずチェックを入れてから「Install Now」
+	→ 最初の画面で「Use admin privileges when installing py.exe」と「Add python.exe to PATH」に必ずチェックを入れてから「Install Now」
+	　（全ユーザー版としてインストールされます）
 	→ インストール後、コマンドプロンプトで python --version と入力し、バージョンが表示されることを確認
 
  -VSCode
-	VSCodeUserSetup-x64-1.144.0.exeを実行しインストール
+	VSCodeSetup-x64-1.144.0.exe（System Installer・全ユーザー版）を実行しインストール
 	→ 追加タスクの選択（★デフォルトから変更を推奨）:
 	• [ON] デスクトップ上にアイコンを作成する（お好みで）
 	• [ON] エクスプローラーのファイルコンテキストメニューに「Code で開く」アクションを追加する

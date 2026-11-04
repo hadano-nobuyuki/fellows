@@ -20,8 +20,8 @@
 
 【自動で設定される内容】
 　Eclipse    C:\pleiades\(バージョン) に展開、デスクトップにショートカット
-　Python     Path に追加してインストール
-　VS Code    手順.txt の追加タスクをすべて ON、Python 拡張・日本語化も追加
+　Python     全ユーザー版としてインストールし、Path に追加
+　VS Code    全ユーザー版としてインストール、手順.txt の追加タスクをすべて ON、Python 拡張・日本語化も追加(拡張機能はログイン中のユーザーに追加)
 　PostgreSQL postgres のパスワード 1234、ロケール C、bin フォルダを Path に追加
 　psqlODBC   64 ビット版をインストール
 　DB         ユーザー myapp(パスワード 1234)、データベース myappdb、テーブルとデータ

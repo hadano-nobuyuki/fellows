@@ -17,7 +17,7 @@ $DbUser       = 'myapp'                                # myappdb の所有者
 $DbUserPass   = '1234'
 
 $PleiadesExe   = 'pleiades-*-java-win-64bit-jre_*.exe'
-$VSCodeExe     = 'VSCodeUserSetup-x64-*.exe'
+$VSCodeExe     = 'VSCodeSetup-x64-*.exe'              # 全ユーザー用(システム)インストーラー
 $PythonExe     = 'python-3.*-amd64.exe'
 $PostgresExe   = 'postgresql-*-windows-x64.exe'
 $OdbcMsi       = 'psqlodbc_x64.msi'
@@ -29,7 +29,7 @@ $DownloadMap = @{
     $PythonExe   = $ReleaseBase + 'python-3.12.10-amd64.exe'
     $PostgresExe = $ReleaseBase + 'postgresql-18.6-5-windows-x64.exe'
     $OdbcMsi     = $ReleaseBase + 'psqlodbc_x64.msi'
-    $VSCodeExe   = 'https://update.code.visualstudio.com/latest/win32-x64-user/stable'
+    $VSCodeExe   = 'https://update.code.visualstudio.com/latest/win32-x64/stable'
 }
 $MaterialDir = Join-Path $ToolsDir '資材'                   # ダウンロードした資材の保存先
 $DownloadDir = $MaterialDir
@@ -45,7 +45,26 @@ try {
 
 # ---------- 共通処理 ----------
 $ErrorActionPreference = 'Stop'
-$LogFile = Join-Path ([Environment]::GetFolderPath('Desktop')) 'setup_log.txt'
+
+# ---------- インストール対象のユーザーを調べる ----------
+# 別の管理者アカウントのパスワードを入力して実行された場合でも、
+# 「実際にログインしているユーザー」の領域(VS Code の拡張機能、ログなど)に設定する
+$TargetUser    = $env:USERNAME
+$TargetProfile = $env:USERPROFILE
+try {
+    $cu = (Get-CimInstance Win32_ComputerSystem -ErrorAction Stop).UserName
+    if ($cu) {
+        $sid = (New-Object Security.Principal.NTAccount($cu)).Translate([Security.Principal.SecurityIdentifier]).Value
+        $pp  = (Get-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList\$sid" -ErrorAction Stop).ProfileImagePath
+        $pp  = [Environment]::ExpandEnvironmentVariables($pp)
+        if ($pp -and (Test-Path -LiteralPath $pp)) { $TargetUser = $cu; $TargetProfile = $pp }
+    }
+} catch { }
+$SameProfile  = ($TargetProfile -ieq $env:USERPROFILE)
+$TargetDesktop = Join-Path $TargetProfile 'Desktop'
+if (-not (Test-Path -LiteralPath $TargetDesktop)) { $TargetDesktop = [Environment]::GetFolderPath('Desktop') }
+$PublicDesktop = [Environment]::GetFolderPath('CommonDesktopDirectory')   # 全ユーザー共通のデスクトップ
+$LogFile = Join-Path $TargetDesktop 'setup_log.txt'
 Start-Transcript -Path $LogFile -Append | Out-Null
 $Results = [ordered]@{}
 
@@ -57,7 +76,7 @@ function Get-Download($pattern) {
     $url = $DownloadMap[$pattern]
     if (-not $url) { return $null }
     New-Item -ItemType Directory -Force -Path $DownloadDir | Out-Null
-    $name = if ($pattern -eq $VSCodeExe) { 'VSCodeUserSetup-x64-latest.exe' } else { [IO.Path]::GetFileName($url) }
+    $name = if ($pattern -eq $VSCodeExe) { 'VSCodeSetup-x64-latest.exe' } else { [IO.Path]::GetFileName($url) }
     $dest = Join-Path $DownloadDir $name
     if (Test-Path -LiteralPath $dest) { return $dest }
     Write-Info "ダウンロード中: $name(ファイルが大きいと数分〜十数分かかります)"
@@ -100,7 +119,7 @@ function Update-SessionPath {
 }
 
 function New-Shortcut($name, $target) {
-    $lnk = Join-Path ([Environment]::GetFolderPath('Desktop')) "$name.lnk"
+    $lnk = Join-Path $PublicDesktop "$name.lnk"      # 全ユーザー共通のデスクトップに作る
     $ws = New-Object -ComObject WScript.Shell
     $s = $ws.CreateShortcut($lnk)
     $s.TargetPath = $target
@@ -146,6 +165,7 @@ function Invoke-Tool($name, [scriptblock]$isInstalled, [scriptblock]$install) {
 Write-Host '研修環境のセットアップを開始します。完了までウィンドウを閉じないでください。' -ForegroundColor Green
 Write-Info "資材フォルダ: $ToolsDir"
 Write-Info "ログ: $LogFile"
+Write-Info "対象ユーザー: $TargetUser"
 
 $pgInstalledNow = $false
 if (-not $DbOnly) {
@@ -175,24 +195,29 @@ Invoke-Tool 'Eclipse(Pleiades)' {
 
 # ---------- 2. Python ----------
 Invoke-Tool 'Python' {
-    # 3.12 以上が入っていればスキップ
-    $py = Get-ChildItem 'HKCU:\SOFTWARE\Python\PythonCore', 'HKLM:\SOFTWARE\Python\PythonCore' -ErrorAction SilentlyContinue |
-          Where-Object { $_.PSChildName -match '^3\.(\d+)$' -and [int]$Matches[1] -ge 12 } | Select-Object -First 1
+    # 3.12 以上が(全ユーザー版、または対象ユーザーのユーザー版で)入っていればスキップ
+    $py = Get-ChildItem 'HKLM:\SOFTWARE\Python\PythonCore', 'HKLM:\SOFTWARE\WOW6432Node\Python\PythonCore' -ErrorAction SilentlyContinue |
+          Where-Object { $_.PSChildName -match '^3\.(\d+)' -and [int]$Matches[1] -ge 12 } | Select-Object -First 1
     if ($py) { "Python $($py.PSChildName)" }
+    else {
+        $u = Get-ChildItem (Join-Path $TargetProfile 'AppData\Local\Programs\Python') -Directory -Filter 'Python3*' -ErrorAction SilentlyContinue |
+             Where-Object { [int]($_.Name -replace '\D', '') -ge 312 -and (Test-Path (Join-Path $_.FullName 'python.exe')) } | Select-Object -First 1
+        if ($u) { "$($u.FullName)(ユーザー版)" }
+    }
 } {
     $exe = Find-Installer $PythonExe
-    Invoke-Installer $exe '/quiet InstallAllUsers=0 PrependPath=1 Include_launcher=1 Include_test=0'
+    Invoke-Installer $exe '/quiet InstallAllUsers=1 PrependPath=1 Include_launcher=1 Include_test=0'
 } | Out-Null
 
 # ---------- 3. VS Code ----------
-$codeCandidates = "$env:LOCALAPPDATA\Programs\Microsoft VS Code\bin\code.cmd",
-                  "$env:ProgramFiles\Microsoft VS Code\bin\code.cmd"
+$codeCandidates = "$env:ProgramFiles\Microsoft VS Code\bin\code.cmd",
+                  (Join-Path $TargetProfile 'AppData\Local\Programs\Microsoft VS Code\bin\code.cmd')
 Invoke-Tool 'VS Code' {
     $c = $codeCandidates | Where-Object { Test-Path $_ } | Select-Object -First 1
     if ($c) { $c }
 } {
     $exe = Find-Installer $VSCodeExe
-    # 手順書の「追加タスク」をすべて ON にした状態でインストール
+    # 手順書の「追加タスク」をすべて ON にした状態で、全ユーザー版としてインストール
     Invoke-Installer $exe '/VERYSILENT /NORESTART /MERGETASKS=!runcode,desktopicon,addcontextmenufiles,addcontextmenufolders,associatewithfiles,addtopath'
 } | Out-Null
 
@@ -203,12 +228,19 @@ if ($code) {
     $ErrorActionPreference = 'Continue'   # code.cmd の警告出力で止まらないように
     try {
         Update-SessionPath
-        $installed = & $code --list-extensions 2>$null
+        # 拡張機能は、実際にログインしているユーザーの領域に入れる
+        $extArgs = @()
+        if (-not $SameProfile) {
+            $extDir = Join-Path $TargetProfile '.vscode\extensions'
+            New-Item -ItemType Directory -Path $extDir -Force | Out-Null
+            $extArgs = @('--extensions-dir', $extDir)
+        }
+        $installed = & $code @extArgs --list-extensions 2>$null
         foreach ($ext in 'ms-python.python', 'MS-CEINTL.vscode-language-pack-ja') {
             if ($installed -contains $ext) { Write-Info "$ext はインストール済み" }
-            else { Write-Info "$ext を追加中"; & $code --install-extension $ext --force | Out-Null }
+            else { Write-Info "$ext を追加中"; & $code @extArgs --install-extension $ext --force | Out-Null }
         }
-        $argv = Join-Path $env:USERPROFILE '.vscode\argv.json'
+        $argv = Join-Path $TargetProfile '.vscode\argv.json'
         if (-not (Test-Path $argv)) {
             New-Item -ItemType Directory -Path (Split-Path $argv) -Force | Out-Null
             Set-Content -Path $argv -Value '{ "locale": "ja" }' -Encoding UTF8

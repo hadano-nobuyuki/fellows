@@ -11,7 +11,7 @@
 	https://github.com/hadano-nobuyuki/fellows/releases
 
 ③Visual Studio Code
-	VSCodeUserSetup-x64-1.144.0.exe
+	VSCodeSetup-x64-1.144.0.exe（System Installer・全ユーザー版）
 	https://code.visualstudio.com/download
 
 ④PostgreSQL
