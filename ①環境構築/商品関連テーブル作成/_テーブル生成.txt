@@ -1,0 +1,19 @@
+※通常は [①環境構築] の setup_db.bat で自動作成できます。うまくいかない場合のみ、以下を手動で実施してください。
+
+スタートメニューの「PostgreSQL 18」→「SQL Shell (psql)」を起動し、
+Server・Database・Port・Username・Client Encoding はそのまま Enter、
+Password に postgres のパスワードを入力してから以下を実行
+
+
+①ユーザ（myapp）の登録（次のSQLを実行）
+CREATE ROLE myapp LOGIN PASSWORD '1234';
+
+②myappdbの作成（次のSQLを実行）
+CREATE DATABASE myappdb OWNER myapp;
+
+③テーブルの生成（次のコマンドを1行ずつ実行)
+\c myappdb
+SET ROLE myapp;
+\i 'C:/…/商品関連テーブル作成/テーブル定義書（myappdb）.sql' 　★パスは自分の環境に合わせる　★区切りは \ ではなく / を使う
+
+
