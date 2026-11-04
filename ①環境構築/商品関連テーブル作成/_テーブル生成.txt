@@ -14,6 +14,7 @@ CREATE DATABASE myappdb OWNER myapp;
 ③テーブルの生成（次のコマンドを1行ずつ実行)
 \c myappdb
 SET ROLE myapp;
+\encoding SJIS
 \i 'C:/…/商品関連テーブル作成/テーブル定義書（myappdb）.sql' 　★パスは自分の環境に合わせる　★区切りは \ ではなく / を使う
 
 

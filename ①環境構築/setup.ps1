@@ -11,7 +11,7 @@ $ToolsDir     = $PSScriptRoot                          # インストーラー�
 $PleiadesRoot = 'C:\pleiades'                          # Eclipse(Pleiades)の展開先
 $PgPassword   = '1234'                                 # postgres のパスワード(アプリ生成時に使う値)
 $PgPort       = 5432
-$SqlDir       = Join-Path (Split-Path $ToolsDir) '④商品関連テーブル作成'   # テーブル定義書(*.sql)の場所
+$SqlDir       = Join-Path $ToolsDir '商品関連テーブル作成'   # テーブル定義書(*.sql)の場所(SJIS)
 $DbName       = 'myappdb'
 $DbUser       = 'myapp'                                # myappdb の所有者
 $DbUserPass   = '1234'
@@ -31,7 +31,17 @@ $DownloadMap = @{
     $OdbcMsi     = $ReleaseBase + 'psqlodbc_x64.msi'
     $VSCodeExe   = 'https://update.code.visualstudio.com/latest/win32-x64-user/stable'
 }
-$DownloadDir = Join-Path $env:TEMP 'setup_downloads'
+$MaterialDir = Join-Path $ToolsDir '資材'                   # ダウンロードした資材の保存先
+$DownloadDir = $MaterialDir
+try {
+    New-Item -ItemType Directory -Force -Path $MaterialDir | Out-Null
+    $probe = Join-Path $MaterialDir '.write_test'
+    Set-Content -LiteralPath $probe -Value 'x' -ErrorAction Stop
+    Remove-Item -LiteralPath $probe -Force
+} catch {
+    # 読み取り専用の場所(サンドボックスなど)のときは一時フォルダに保存する
+    $DownloadDir = Join-Path $env:TEMP 'setup_downloads'
+}
 
 # ---------- 共通処理 ----------
 $ErrorActionPreference = 'Stop'
@@ -69,7 +79,8 @@ function Get-Download($pattern) {
 }
 
 function Find-Installer($pattern) {
-    $f = Get-ChildItem -Path $ToolsDir -Filter $pattern -File -ErrorAction SilentlyContinue |
+    $f = $ToolsDir, $MaterialDir, $DownloadDir | Select-Object -Unique | Where-Object { Test-Path -LiteralPath $_ } |
+         ForEach-Object { Get-ChildItem -LiteralPath $_ -Filter $pattern -File -ErrorAction SilentlyContinue } |
          Sort-Object Name -Descending | Select-Object -First 1
     if ($f) { return $f.FullName }
     $dl = Get-Download $pattern
@@ -273,7 +284,7 @@ if (-not ($DbOnly -or $pgInstalledNow)) {
     $Results['テーブル作成'] = '失敗: psql.exe なし'
 } else {
     try {
-        # ④商品関連テーブル作成 に無ければ、このファイルと同じフォルダも探す
+        # 商品関連テーブル作成 に無ければ、このファイルと同じフォルダも探す
         $sql = $SqlDir, $ToolsDir | Where-Object { Test-Path -LiteralPath $_ } |
                ForEach-Object { Get-ChildItem -LiteralPath $_ -Filter '*.sql' -File } | Select-Object -First 1
         if (-not $sql) { throw "テーブル定義書(.sql)がありません: $SqlDir" }
@@ -281,7 +292,7 @@ if (-not ($DbOnly -or $pgInstalledNow)) {
         $tmpSql = Join-Path $env:TEMP 'myappdb_tables.sql'
         Copy-Item $sql.FullName $tmpSql -Force
         $psql = Join-Path $pgBin 'psql.exe'
-        $env:PGCLIENTENCODING = 'UTF8'
+        $env:PGCLIENTENCODING = 'SJIS'   # テーブル定義書(.sql)は Shift_JIS で保存されている
         $env:PGOPTIONS = '-c client_min_messages=warning'   # 「テーブルが無いのでスキップ」などの NOTICE を表示しない
         $ErrorActionPreference = 'Continue'   # psql の NOTICE 出力で止まらないように
 
