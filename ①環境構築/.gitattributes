@@ -1,0 +1,5 @@
+# bat/ps1/sql/txt must not be converted (CRLF, sql is SJIS)
+*.bat -text
+*.ps1 -text
+*.sql -text
+*.txt -text
