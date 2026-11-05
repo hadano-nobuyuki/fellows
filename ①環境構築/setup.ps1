@@ -240,6 +240,44 @@ if ($code) {
             if ($installed -contains $ext) { Write-Info "$ext はインストール済み" }
             else { Write-Info "$ext を追加中"; & $code @extArgs --install-extension $ext --force | Out-Null }
         }
+        # 別ユーザーの領域に拡張機能を入れた場合、日本語パックの登録ファイル(languagepacks.json)が
+        # そのユーザー側にできず、英語のままになるため、ここで作成する
+        if (-not $SameProfile) {
+            try {
+                $packDir = Get-ChildItem $extDir -Directory -Filter 'ms-ceintl.vscode-language-pack-ja-*' -ErrorAction Stop |
+                           Sort-Object Name -Descending | Select-Object -First 1
+                if ($packDir) {
+                    $pkg = Get-Content (Join-Path $packDir.FullName 'package.json') -Raw -Encoding UTF8 | ConvertFrom-Json
+                    $loc = $pkg.contributes.localizations | Where-Object { $_.languageId -eq 'ja' } | Select-Object -First 1
+                    $tr = [ordered]@{}
+                    foreach ($t in $loc.translations) {
+                        $tr[$t.id] = Join-Path $packDir.FullName (($t.path -replace '^\./', '') -replace '/', '\')
+                    }
+                    $md5 = [Security.Cryptography.MD5]::Create()
+                    $hash = ([BitConverter]::ToString($md5.ComputeHash([Text.Encoding]::UTF8.GetBytes("ms-ceintl.vscode-language-pack-ja$($pkg.version)"))) -replace '-', '').ToLower()
+                    $entry = [ordered]@{
+                        hash         = $hash
+                        extensions   = @([ordered]@{
+                            extensionIdentifier = [ordered]@{ id = 'ms-ceintl.vscode-language-pack-ja'; uuid = '077515fe-1509-49c0-9dcc-5511b41682fc' }
+                            version = $pkg.version })
+                        translations = $tr
+                        label        = $loc.localizedLanguageName
+                    }
+                    $lpFile = Join-Path $TargetProfile 'AppData\Roaming\Code\languagepacks.json'
+                    New-Item -ItemType Directory -Path (Split-Path $lpFile) -Force | Out-Null
+                    $all = [ordered]@{}
+                    if (Test-Path -LiteralPath $lpFile) {
+                        $cur = Get-Content -LiteralPath $lpFile -Raw -Encoding UTF8 | ConvertFrom-Json
+                        foreach ($p in $cur.PSObject.Properties) { $all[$p.Name] = $p.Value }
+                    }
+                    $all['ja'] = $entry
+                    [IO.File]::WriteAllText($lpFile, ($all | ConvertTo-Json -Depth 8 -Compress), (New-Object System.Text.UTF8Encoding($false)))
+                    Write-Info '日本語パックの登録ファイルを作成しました'
+                }
+            } catch {
+                Write-Warn "日本語パックの登録に失敗しました。VS Code 起動後に Ctrl+Shift+P →「Configure Display Language」→「日本語」を実行してください: $_"
+            }
+        }
         $argv = Join-Path $TargetProfile '.vscode\argv.json'
         if (-not (Test-Path $argv)) {
             New-Item -ItemType Directory -Path (Split-Path $argv) -Force | Out-Null
