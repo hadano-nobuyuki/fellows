@@ -23,7 +23,7 @@ $PostgresExe   = 'postgresql-*-windows-x64.exe'
 $OdbcMsi       = 'psqlodbc_x64.msi'
 
 # インストーラーが無いときの自動ダウンロード元(GitHub Releases / VS Code 公式)
-$ReleaseBase = 'https://github.com/hadano-nobuyuki/fellows/releases/download/v1.0/'
+$ReleaseBase = 'https://github.com/hadano-nobuyuki/fellows-phase1/releases/download/v1.0/'
 $DownloadMap = @{
     $PleiadesExe = $ReleaseBase + 'pleiades-2026-09-java-win-64bit-jre_20261016.exe'
     $PythonExe   = $ReleaseBase + 'python-3.12.10-amd64.exe'
@@ -243,7 +243,8 @@ if ($code) {
         $argv = Join-Path $TargetProfile '.vscode\argv.json'
         if (-not (Test-Path $argv)) {
             New-Item -ItemType Directory -Path (Split-Path $argv) -Force | Out-Null
-            Set-Content -Path $argv -Value '{ "locale": "ja" }' -Encoding UTF8
+            # BOM 付きだと VS Code が読み込めないため、BOM なしの UTF-8 で書く
+            [IO.File]::WriteAllText($argv, '{ "locale": "ja" }', (New-Object System.Text.UTF8Encoding($false)))
         } elseif (-not (Select-String -Path $argv -Pattern '"locale"' -Quiet)) {
             Write-Warn '表示言語は VS Code 起動後の「Change Language and Restart」で日本語にしてください'
         }
