@@ -62,7 +62,7 @@ PostgreSQL JDBC ドライバ(postgresql-42.x.x.jar)は、Maven が自動で取�
     ⑤HTML素材からhtml作成\  画面定義.xlsx, ロゴ.png, ロゴ_modern.png, 生成したhtml\
   ②試験実施手順\
     研修内容.txt            講義の進め方
-    _指示書・アプリ作成に必要な資材\   html、css、logo、テーブル定義書(sql)
+    _アプリ作成に必要な資材\   html、css、logo、テーブル定義書(sql)
     ①指示書\              指示書（原本Free版）.xlsx
     ②アプリ動作検証方法\   アプリ実行手順_Java.md, アプリ実行手順_Python.md, アプリ実行手順_VBA.md, images\
   ⑤研修用（Free版）\

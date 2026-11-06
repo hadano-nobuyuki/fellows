@@ -40,7 +40,7 @@
 	・「指示書（原本Free版）.xlsx」
 	・html（login.html、product_list.html、order_detail.html、style.css、logo.svg）
 	・テーブル定義書（myappdb）.sql
-	　→ [②試験実施手順] > [_指示書・アプリ作成に必要な資材]
+	　→ [②試験実施手順] > [_アプリ作成に必要な資材]
 
 	指示内容：『添付の「指示書（原本Free版）.xlsx」が、プログラム生成可能な指示書になっているか評価してください。』
 	※実際に、Claudeに読ませて、指摘が出ることを確認しましょう。
