@@ -24,9 +24,9 @@ Oct 25, 2026
 
 ### 2.1 環境構築(講義の前に完了させる)
 
-講義で使う開発環境(Eclipse、Python、VSCode、PostgreSQL、psqlODBC、myappdb のテーブル)は、環境構築用のリポジトリで配布しています。**講義の前に、そちらの手順で環境構築を済ませておいてください。**
+講義で使う開発環境(Eclipse、Python、VSCode、PostgreSQL、psqlODBC、myappdb のテーブル)は、このリポジトリの環境構築ツールで準備します。**講義の前に、下記の手順で環境構築を済ませておいてください。**
 
-- 環境構築用リポジトリ: https://github.com/hadano-nobuyuki/fellows-phase1
+- 環境構築の手順: [①環境構築/README.md](./①環境構築/README.md)(同じリポジトリの `①環境構築` フォルダです)
 - 環境構築で問題が発生した場合は、講義の中で講師が対応します。
 
 環境構築が済んでいると、次の状態になっています。

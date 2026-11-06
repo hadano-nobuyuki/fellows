@@ -1,6 +1,9 @@
 資材/
-②講義用/⑤研修用（Free版）/②成果物/
+②講義用/⑤研修用（Free版）/②成果物/**
+!②講義用/⑤研修用（Free版）/②成果物/**/
+!②講義用/⑤研修用（Free版）/②成果物/**/*.zip
 .metadata/
 Servers/
 *.log
+.fuse_hidden*
 LOCK
