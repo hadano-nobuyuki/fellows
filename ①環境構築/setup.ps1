@@ -23,7 +23,7 @@ $PostgresExe   = 'postgresql-*-windows-x64.exe'
 $OdbcMsi       = 'psqlodbc_x64.msi'
 
 # インストーラーが無いときの自動ダウンロード元(GitHub Releases / VS Code 公式)
-$ReleaseBase = 'https://github.com/hadano-nobuyuki/fellows-phase1/releases/download/v1.0/'
+$ReleaseBase = 'https://github.com/imo96/fellows-phase1/releases/download/v1.0/'
 $DownloadMap = @{
     $PleiadesExe = $ReleaseBase + 'pleiades-2026-09-java-win-64bit-jre_20261016.exe'
     $PythonExe   = $ReleaseBase + 'python-3.12.10-amd64.exe'
