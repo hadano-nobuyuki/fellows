@@ -50,6 +50,8 @@ pip install -r requirements.txt
 
 ### 3. 環境変数の設定
 
+この設定を忘れると、`KeyError: 'DJANGO_SECRET_KEY'` になります。設定した値は、その画面(ターミナル)を閉じると消えるので、**新しい画面を開くたびに設定**してください。
+
 ```
 set DJANGO_SECRET_KEY=local-dev-key-change-me-0123456789
 set DB_HOST=localhost
