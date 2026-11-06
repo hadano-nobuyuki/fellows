@@ -15,7 +15,7 @@ Oct 25, 2026
 
 **全体の流れ**
 
-1. 事前準備(講義の前に、環境構築を済ませておく。教材フォルダの受け取り)
+1. 事前準備(受講生は、講義の前に ①環境構築 と ②Claude利用開始 を済ませておく。教材フォルダの受け取り)
 2. Claude のチャットに指示書と資材を添付し、Java → Python の順に生成して各自で動かす
 3. 同じユーザーで Java・Python(・講師の VBA)にログインして相互ログインを確認する
 4. フェーズ②で AWS にデプロイする(別手順書)
@@ -38,11 +38,17 @@ Oct 25, 2026
 | Python | VSCode、Python 3.12 以上 | Django 6.1、psycopg 3 は、生成したアプリの venv に入れる |
 | VBA | (任意)Excel、psqlODBC | 講義では不要。講義後に VBA を試す場合のみ。ODBC ドライバは Excel と同じ bit 数(64bit) |
 
-### 2.2 講義で使うもの
+### 2.2 Claude の利用開始(講義の前に完了させる)
+
+Claude のアカウント(無料プラン)を、講義の前に作成しておいてください。登録に**電話番号の認証が必要になることがある**ため、講義の当日には間に合わないことがあります。
+
+- 手順: [②Claude利用開始/claude開始手順.md](./②Claude利用開始/claude開始手順.md)
+
+### 2.3 講義で使うもの
 
 | 用途 | ソフト | 注意点 |
 | --- | --- | --- |
-| 生成 | Claude(Free プランのチャット) | ログイン済みであること(使い始め方は `①前準備\①Claude利用開始\claude開始手順.md`)。Free は 5 時間単位の使用量制限があるので、1 言語ずつ生成する |
+| 生成 | Claude(Free プランのチャット) | ②Claude利用開始 を済ませ、ログイン済みであること(手順は `②Claude利用開始\claude開始手順.md`)。Free は 5 時間単位の使用量制限があるので、1 言語ずつ生成する |
 
 PostgreSQL JDBC ドライバ(postgresql-42.x.x.jar)は、Maven が自動で取り込むので、手動でダウンロードしません。
 
@@ -54,12 +60,13 @@ PostgreSQL JDBC ドライバ(postgresql-42.x.x.jar)は、Maven が自動で取�
 **フォルダ構成**
 
 ```
-②講義用\
+①環境構築\                 setup.bat, setup.ps1, setup_db.bat, README.md など(受講生が講義の前に実施)
+②Claude利用開始\           claude開始手順.md, images\(受講生が講義の前に実施)
+③講義用\
   ★mdファイルの表示方法.txt
   ①前準備\
-    ①Claude利用開始\        claude開始手順.md(Claude の使い始め方)
-    ②商品関連テーブル\      テーブル定義書（myappdb）.sql, テーブル定義書（myappdb）.xlsx
-    ⑤HTML素材からhtml作成\  画面定義.xlsx, ロゴ.png, ロゴ_modern.png, 生成したhtml\
+    ①商品関連テーブル\      テーブル定義書（myappdb）.sql, テーブル定義書（myappdb）.xlsx
+    ②HTML素材からhtml作成\  画面定義.xlsx, ロゴ, 生成したhtml\
   ②試験実施手順\
     研修内容.txt            講義の進め方
     _アプリ作成に必要な資材\   html、css、logo、テーブル定義書(sql)
